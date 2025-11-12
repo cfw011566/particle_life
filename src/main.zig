@@ -17,7 +17,7 @@ pub fn main() anyerror!void {
     for (0..atoms.len) |i| {
         const x: f32 = @floatFromInt(rl.getRandomValue(10 * CELL_RADIUS, screen_width - 10 * CELL_RADIUS));
         const y: f32 = @floatFromInt(rl.getRandomValue(10 * CELL_RADIUS, screen_height - 10 * CELL_RADIUS));
-        const species: Setting.Species = @enumFromInt(rl.getRandomValue(0, @intFromEnum(Setting.Species.cyan)));
+        const species: Setting.Species = @enumFromInt(rl.getRandomValue(0, Setting.Species.size()));
         atoms[i] = Cell.init(x, y, species, CELL_RADIUS);
     }
 

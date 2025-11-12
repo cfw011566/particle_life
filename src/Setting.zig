@@ -21,6 +21,10 @@ pub const Species = enum(u8) {
             .cyan => rl.Color.sky_blue,
         };
     }
+
+    pub fn size() u8 {
+        return @intFromEnum(Species.cyan);
+    }
 };
 
 pub const default = Self{
