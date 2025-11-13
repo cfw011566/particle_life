@@ -25,17 +25,16 @@ pub fn draw(self: Self) void {
 }
 
 pub fn update(self: *Self, another: Self, setting: Setting) void {
-    var fx: f32 = 0;
-    var fy: f32 = 0;
+    const distance = rl.math.vector2Distance(self.position, another.position);
+    if (distance <= 0 or distance >= setting.force_distance) {
+        return;
+    }
+    const g = Setting.forceG(self.species, another.species);
     const dx = self.position.x - another.position.x;
     const dy = self.position.y - another.position.y;
-    const distance = rl.math.vector2Distance(self.position, another.position);
-    if (distance > 0 and distance < setting.force_distance) {
-        const g = Setting.forceG(self.species, another.species);
-        const force = (g * 1) / distance;
-        fx += force * dx;
-        fy += force * dy;
-    }
+    const force = (g * 1) / distance;
+    const fx = force * dx;
+    const fy = force * dy;
     self.velocity.x = (self.velocity.x + fx) * setting.velocity_factor;
     self.velocity.y = (self.velocity.y + fy) * setting.velocity_factor;
     self.position = rl.math.vector2Add(self.position, self.velocity);

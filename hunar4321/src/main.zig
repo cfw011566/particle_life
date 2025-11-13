@@ -3,11 +3,11 @@ const rl = @import("raylib");
 const Cell = @import("Cell.zig");
 const Setting = @import("Setting.zig");
 
-const NUM_ATOM = 3000;
-const CELL_RADIUS = 1;
+const NUM_ATOM = 5000;
+const CELL_RADIUS = 1.5;
 
-const screen_width = 1200;
-const screen_height = 900;
+const screen_width = 1800;
+const screen_height = 1000;
 
 pub fn main() anyerror!void {
     // Initialization
@@ -15,8 +15,8 @@ pub fn main() anyerror!void {
 
     var atoms: [NUM_ATOM]Cell = undefined;
     for (0..atoms.len) |i| {
-        const x: f32 = @floatFromInt(rl.getRandomValue(10 * CELL_RADIUS, screen_width - 10 * CELL_RADIUS));
-        const y: f32 = @floatFromInt(rl.getRandomValue(10 * CELL_RADIUS, screen_height - 10 * CELL_RADIUS));
+        const x: f32 = @floatFromInt(rl.getRandomValue(10, screen_width - 10));
+        const y: f32 = @floatFromInt(rl.getRandomValue(10, screen_height - 10));
         const species: Setting.Species = @enumFromInt(rl.getRandomValue(0, Setting.Species.size()));
         atoms[i] = Cell.init(x, y, species, CELL_RADIUS);
     }
