@@ -1,3 +1,4 @@
+const std = @import("std");
 const rl = @import("raylib");
 
 width: i32,
@@ -23,9 +24,11 @@ pub const Species = enum(u8) {
     }
 
     pub fn size() u8 {
-        return @intFromEnum(Species.cyan);
+        return @intFromEnum(Species.cyan) + 1;
     }
 };
+
+var g_matrix: [Species.size()][Species.size()]f32 = undefined;
 
 pub const default = Self{
     .width = 900,
@@ -35,6 +38,12 @@ pub const default = Self{
 };
 
 pub fn init(width: i32, height: i32, force_distance: f32, velocity_factor: f32) Self {
+    for (0..Species.size()) |i| {
+        for (0..Species.size()) |j| {
+            g_matrix[i][j] = @as(f32, @floatFromInt(rl.getRandomValue(-1000, 1000))) / 1000.0;
+        }
+    }
+    std.log.info("g_matrix = {any}", .{g_matrix});
     return Self{
         .width = width,
         .height = height,
@@ -44,30 +53,7 @@ pub fn init(width: i32, height: i32, force_distance: f32, velocity_factor: f32) 
 }
 
 pub fn forceG(species1: Species, species2: Species) f32 {
-    return switch (species1) {
-        .green => switch (species2) {
-            .green => 0.93,
-            .red => -0.83,
-            .orange => 0.28,
-            .cyan => -0.06,
-        },
-        .red => switch (species2) {
-            .green => -0.46,
-            .red => 0.49,
-            .orange => 0.28,
-            .cyan => 0.64,
-        },
-        .orange => switch (species2) {
-            .green => -0.79,
-            .red => 0.23,
-            .orange => -0.02,
-            .cyan => -0.75,
-        },
-        .cyan => switch (species2) {
-            .green => 0.57,
-            .red => 0.95,
-            .orange => -0.36,
-            .cyan => 0.44,
-        },
-    };
+    const i = @intFromEnum(species1);
+    const j = @intFromEnum(species2);
+    return g_matrix[i][j];
 }

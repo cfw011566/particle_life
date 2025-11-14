@@ -4,7 +4,7 @@ const Cell = @import("Cell.zig");
 const Setting = @import("Setting.zig");
 
 const NUM_ATOM = 5000;
-const CELL_RADIUS = 1.5;
+const CELL_RADIUS = 1.0;
 
 const screen_width = 1800;
 const screen_height = 1000;
@@ -13,15 +13,19 @@ pub fn main() anyerror!void {
     // Initialization
     //--------------------------------------------------------------------------------------
 
+    rl.setRandomSeed(@intCast(std.time.timestamp()));
+
     var atoms: [NUM_ATOM]Cell = undefined;
     for (0..atoms.len) |i| {
         const x: f32 = @floatFromInt(rl.getRandomValue(10, screen_width - 10));
         const y: f32 = @floatFromInt(rl.getRandomValue(10, screen_height - 10));
-        const species: Setting.Species = @enumFromInt(rl.getRandomValue(0, Setting.Species.size()));
+        const species: Setting.Species = @enumFromInt(rl.getRandomValue(0, Setting.Species.size() - 1));
         atoms[i] = Cell.init(x, y, species, CELL_RADIUS);
     }
 
-    const setting = Setting.init(screen_width, screen_height, 80, 0.5);
+    const distance: f32 = @floatFromInt(rl.getRandomValue(50, 100));
+    const velocity: f32 = @floatFromInt(rl.getRandomValue(40, 60));
+    const setting = Setting.init(screen_width, screen_height, distance, velocity / 100.0);
 
     rl.initWindow(screen_width, screen_height, "particle life");
     defer rl.closeWindow(); // Close window and OpenGL context
