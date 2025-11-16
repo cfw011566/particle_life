@@ -13,7 +13,10 @@ pub fn main() anyerror!void {
     // Initialization
     //--------------------------------------------------------------------------------------
 
-    rl.setRandomSeed(@intCast(std.time.timestamp()));
+    var seed: u32 = undefined;
+    try std.posix.getrandom(std.mem.asBytes(&seed)); // Get a secure seed
+    std.log.info("seed = {d}", .{seed});
+    rl.setRandomSeed(@intCast(seed));
 
     var atoms: [NUM_ATOM]Cell = undefined;
     for (0..atoms.len) |i| {
